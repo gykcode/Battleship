@@ -1,0 +1,375 @@
+/* Import Catamaran typeface from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+:root {
+  --grid-size: 10;
+  --grid-dim: min(500px, 40vw);
+  --square-dim: calc(var(--grid-dim) / var(--grid-size));
+
+  --main: rgb(60, 60, 202);
+  --main-darker: rgb(32, 32, 128);
+  --red: #ff1d1d;
+  --grey: #eee;
+  --dark: #3e3e3e;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: var(--grey);
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: var(--grey);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+footer a {
+  color: var(--main-darker);
+  text-decoration: none;
+}
+
+main {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+}
+
+.board {
+  width: var(--grid-dim);
+  height: var(--grid-dim);
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+/* Naming board */
+.board::after {
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+  text-align: center;
+  pointer-events: none;
+}
+.board.opponent::after {
+  content: 'Computer board';
+}
+.board.player::after {
+  content: 'Your board';
+}
+
+.grid {
+  width: var(--grid-dim);
+  height: var(--grid-dim);
+  outline: 0.5px solid black;
+
+  display: grid;
+  grid-template-columns: repeat(var(--grid-size), auto);
+  grid-template-rows: repeat(var(--grid-size), auto);
+}
+
+.square {
+  width: var(--square-dim);
+  height: var(--square-dim);
+  border: solid 0.5px black;
+}
+
+/* Changing square styling on hover */
+.board .square:hover {
+  box-shadow: var(--square-dim) 5px 0px rgba(0, 0, 0, 0.1) inset;
+}
+.board.opponent .square:hover {
+  cursor: crosshair;
+  border-width: 3px;
+}
+.board.opponent .square.shot:hover,
+.board.opponent .ships .square:hover {
+  cursor: not-allowed;
+  border-width: 0.5px;
+}
+
+.attacks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ship {
+  position: absolute;
+  outline: 0.5px solid black;
+  display: flex;
+  background-color: var(--main);
+}
+.ship.ver {
+  width: var(--square-dim);
+  height: fit-content;
+  flex-direction: column;
+}
+.ship.hor {
+  height: var(--square-dim);
+  width: fit-content;
+  flex-direction: row;
+}
+.ship.sunk {
+  background-color: var(--main-darker);
+}
+
+.attacks {
+  z-index: 5;
+}
+
+.mark {
+  width: var(--square-dim);
+  height: var(--square-dim);
+  position: absolute;
+}
+
+.mark .bar {
+  border-radius: 4px;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mark.hit .bar {
+  background-color: var(--red);
+}
+
+.mark .bar-1 {
+  width: 12%;
+  height: 70%;
+}
+.mark .bar-2 {
+  width: 70%;
+  height: 12%;
+}
+
+.board.opponent .ship {
+  visibility: hidden;
+}
+
+.board.opponent .ship.sunk {
+  visibility: visible;
+}
+.board.opponent .ship.sunk .square {
+  background-color: var(--main);
+}
+
+.btn {
+  display: block;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  background-color: var(--main);
+  border: solid 3px var(--main-darker);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  top: 0px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0px 0px 15px rgba(60, 60, 202, 0.3);
+}
+.btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 4px 15px rgba(60, 60, 202, 0.6);
+  border-radius: 12px;
+}
+.btn:active {
+  top: 4px;
+  transform: scale(1.05);
+  box-shadow: 0px 0px 15px rgba(60, 60, 202, 0.3);
+  transition-duration: 0.1s;
+}
+
+.infos {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: var(--grid-dim);
+  margin-bottom: 1rem;
+}
+
+.info {
+  font-size: 14px;
+  color: var(--dark);
+  background-color: var(--grey);
+  padding: 8px 12px;
+  border-radius: 50px;
+}
+.info img {
+  vertical-align: sub;
+  margin-right: 6px;
+}
+
+.modal-wrapper {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+  max-width: 400px;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(60, 60, 202, 0.3);
+}
+
+.modal p {
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+#turn-info {
+  font-size: 24px;
+  grid-column: 1 / span 2;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 200px;
+  text-align: center;
+  background-color: var(--grey);
+  border: solid 2px var(--dark);
+  border-radius: 4px;
+
+  position: sticky;
+  top: 0.5rem;
+  z-index: 7;
+  opacity: 0.9;
+}
+
+@media screen and (max-width: 800px) {
+  :root {
+    --grid-dim: min(90vw, 400px);
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  header {
+    padding: 1.5rem;
+  }
+  main {
+    grid-template-columns: auto;
+    gap: 1vh;
+  }
+  .board {
+    margin-bottom: 1.7rem;
+  }
+  .board::after {
+    transform: rotate(-90deg);
+    position: absolute;
+    width: 100%;
+    right: 100%;
+    left: -26px;
+    top: 0px;
+    bottom: 0px;
+  }
+  .playing .board.player {
+    --grid-dim: min(60vw, 400px);
+    --square-dim: calc(var(--grid-dim) / var(--grid-size));
+  }
+  .btn {
+    font-size: 16px;
+  }
+  #turn-info {
+    font-size: 16px;
+    padding: 0.4rem;
+    width: 160px;
+    grid-column: 1 / span 1;
+  }
+}
+
+@keyframes invalid-animation {
+  0% {
+    transform: translateX(0px);
+  }
+  15% {
+    transform: translateX(-5px);
+    background-color: var(--red);
+  }
+  30% {
+    transform: translateX(5px);
+  }
+  45% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+    background-color: var(--red);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.invalid {
+  animation-name: invalid-animation;
+  animation-duration: 0.7s;
+  animation-timing-function: ease-in-out;
+}

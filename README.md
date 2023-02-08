@@ -1,3 +1,3 @@
-# battleship
+# Battleship Project Odin JS Course
 
-A battleship game you can play on the web
+
